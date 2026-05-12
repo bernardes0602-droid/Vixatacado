@@ -1,7 +1,7 @@
 const store = {
-  name: "Vix Auto Peças e Acessórios",
+  name: "Vix Atacado Auto Peças e Acessórios",
   whatsapp: "5527999998888",
-  defaultMessage: "Olá! Quero solicitar um orçamento na Vix Auto Peças e Acessórios."
+  defaultMessage: "Olá! Quero solicitar um orçamento na Vix Atacado Auto Peças e Acessórios."
 };
 
 const categoryLabels = {
@@ -135,13 +135,40 @@ function setCurrentYear() {
   });
 }
 
+function normalizePath(pathname) {
+  if (!pathname || pathname === "/") {
+    return "/";
+  }
+
+  const cleaned = pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+
+  if (cleaned === "/index.html") {
+    return "/";
+  }
+
+  return cleaned.replace(/\.html$/i, "");
+}
+
 function setActiveNav() {
-  const current = window.location.pathname.split("/").pop() || "index.html";
+  const current = normalizePath(window.location.pathname);
+
   document.querySelectorAll(".site-nav a").forEach((link) => {
     const href = link.getAttribute("href");
-    if (href && href.split("#")[0] === current && !href.includes("#")) {
-      link.setAttribute("aria-current", "page");
+
+    if (!href) {
+      return;
     }
+
+    const url = new URL(href, window.location.origin);
+    const linkPath = normalizePath(url.pathname);
+    const isSectionLink = Boolean(url.hash) && linkPath === "/";
+
+    if (!isSectionLink && linkPath === current) {
+      link.setAttribute("aria-current", "page");
+      return;
+    }
+
+    link.removeAttribute("aria-current");
   });
 }
 
@@ -268,24 +295,30 @@ function setupCatalog() {
   const filterButtons = [...document.querySelectorAll("[data-filter]")];
   const params = new URLSearchParams(window.location.search);
   const validFilters = new Set(["all", ...Object.keys(categoryLabels)]);
+  const validSorts = new Set(["relevancia", "menor-preco", "maior-preco", "marca"]);
 
   let activeFilter = params.get("categoria") || "all";
   let searchTerm = params.get("busca") || "";
-  let activeSort = "relevancia";
+  let activeSort = params.get("ordem") || "relevancia";
 
   if (!validFilters.has(activeFilter)) {
     activeFilter = "all";
   }
 
+  if (!validSorts.has(activeSort)) {
+    activeSort = "relevancia";
+  }
+
   if (searchInput) {
     searchInput.value = searchTerm;
     searchInput.addEventListener("input", (event) => {
-      searchTerm = event.target.value.trim().toLowerCase();
+      searchTerm = event.target.value;
       updateCatalog();
     });
   }
 
   if (sortSelect) {
+    sortSelect.value = activeSort;
     sortSelect.addEventListener("change", (event) => {
       activeSort = event.target.value;
       updateCatalog();
@@ -307,6 +340,27 @@ function setupCatalog() {
     });
   });
 
+  function syncCatalogQuery() {
+    const nextParams = new URLSearchParams();
+    const trimmedSearch = searchTerm.trim();
+
+    if (activeFilter !== "all") {
+      nextParams.set("categoria", activeFilter);
+    }
+
+    if (trimmedSearch) {
+      nextParams.set("busca", trimmedSearch);
+    }
+
+    if (activeSort !== "relevancia") {
+      nextParams.set("ordem", activeSort);
+    }
+
+    const nextQuery = nextParams.toString();
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}`;
+    window.history.replaceState({}, "", nextUrl);
+  }
+
   function updateCatalog() {
     const normalizedSearch = searchTerm.trim().toLowerCase();
     const filtered = products.filter((product) => {
@@ -316,6 +370,7 @@ function setupCatalog() {
       return inCategory && matchesSearch;
     });
 
+    syncCatalogQuery();
     renderCatalog(sortProducts(filtered, activeSort));
   }
 

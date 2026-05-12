@@ -2,6 +2,48 @@
   publish = "."
 
 [[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/catalogo.html"
+  to = "/catalogo"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/sobre.html"
+  to = "/sobre"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/contato.html"
+  to = "/contato"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/catalogo/"
+  to = "/catalogo"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/sobre/"
+  to = "/sobre"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/contato/"
+  to = "/contato"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/catalogo"
   to = "/catalogo.html"
   status = 200

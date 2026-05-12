@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vixatacado.com.br/sitemap.xml

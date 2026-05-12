@@ -1,3 +1,10 @@
+/index.html / 301!
+/catalogo.html /catalogo 301!
+/sobre.html /sobre 301!
+/contato.html /contato 301!
+/catalogo/ /catalogo 301!
+/sobre/ /sobre 301!
+/contato/ /contato 301!
 /catalogo /catalogo.html 200
 /sobre /sobre.html 200
 /contato /contato.html 200
