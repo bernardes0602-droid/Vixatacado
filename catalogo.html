@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos | Vix Auto Peças e Acessórios</title>
+  <meta
+    name="description"
+    content="Consulte os produtos da Vix Auto Peças e Acessórios por categoria, marca ou aplicação e solicite orçamento."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body data-page="catalogo">
+  <div class="site-shell">
+    <div class="topbar">
+      <div class="container topbar-inner">
+        <p>Catálogo com busca rápida, apresentação forte e orçamento imediato.</p>
+      </div>
+    </div>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Vix Auto Peças e Acessórios">
+          <img class="brand-logo" src="assets/img/logo-vix.png" alt="Logo da Vix Auto Peças e Acessórios">
+        </a>
+
+        <div class="header-utility">
+          <span class="header-utility-copy">Peças e acessórios para diversas marcas com atendimento rápido.</span>
+          <a class="button button-secondary button-small" href="contato.html#orcamento">Pedir orçamento</a>
+        </div>
+      </div>
+
+      <div class="menu-ribbon">
+        <div class="container menu-ribbon-inner">
+          <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <nav class="site-nav" id="site-nav" aria-label="Principal">
+            <a href="index.html">Início</a>
+            <a href="sobre.html">Sobre nós</a>
+            <a href="catalogo.html">Produtos</a>
+            <a href="index.html#marcas">Marcas</a>
+            <a href="contato.html">Contato</a>
+          </nav>
+
+          <a class="menu-contact" data-whatsapp-link href="https://wa.me/5527999998888" aria-label="Fale conosco pelo WhatsApp">
+            <span class="menu-contact-icon">WA</span>
+            <span class="menu-contact-copy">
+              <small>Fale conosco</small>
+              <strong>(27) 99999-8888</strong>
+            </span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <article class="page-banner">
+            <img class="page-banner-image" src="assets/img/banner-parts-premium-v2.png" alt="Banner promocional de autopeças da Vix Auto Peças e Acessórios">
+            <div class="page-banner-copy">
+              <span class="eyebrow">Produtos</span>
+              <h1>Catálogo com busca rápida e apresentação comercial forte.</h1>
+              <p>
+                Pesquise por categoria, marca ou aplicação e abra o WhatsApp com a peça selecionada para acelerar o
+                atendimento.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section catalog-shell">
+        <div class="container catalog-layout">
+          <aside class="catalog-aside">
+            <img class="catalog-aside-logo" src="assets/img/logo-vix.png" alt="Logo da Vix Auto Peças e Acessórios">
+            <p>
+              Mix comercial pensado para oficina, varejo e manutenção rápida, com peças para diversas marcas e uma
+              navegação mais clara.
+            </p>
+            <ul class="check-list">
+              <li>Busca rápida por peça</li>
+              <li>Orçamento imediato no WhatsApp</li>
+              <li>Categorias organizadas para venda</li>
+            </ul>
+            <a class="button button-primary" data-whatsapp-link href="https://wa.me/5527999998888">Falar com a equipe</a>
+          </aside>
+
+          <div class="catalog-main">
+            <div class="catalog-toolbar">
+              <label class="field">
+                <span>Buscar peça</span>
+                <input
+                  type="search"
+                  name="busca"
+                  placeholder="Ex.: pastilha, bobina, correia, Bosch"
+                  autocomplete="off"
+                  data-search
+                >
+              </label>
+
+              <label class="field field-select">
+                <span>Ordenar por</span>
+                <select data-sort>
+                  <option value="relevancia">Relevância</option>
+                  <option value="menor-preco">Menor preço</option>
+                  <option value="maior-preco">Maior preço</option>
+                  <option value="marca">Marca</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="filter-row" role="tablist" aria-label="Filtrar categorias">
+              <button class="chip is-active" type="button" data-filter="all">Todos</button>
+              <button class="chip" type="button" data-filter="motor">Motor</button>
+              <button class="chip" type="button" data-filter="freios">Freios</button>
+              <button class="chip" type="button" data-filter="suspensao">Suspensão</button>
+              <button class="chip" type="button" data-filter="eletrica">Elétrica</button>
+              <button class="chip" type="button" data-filter="filtros">Filtros</button>
+              <button class="chip" type="button" data-filter="iluminacao">Iluminação</button>
+            </div>
+
+            <div class="catalog-meta">
+              <p data-results-count>0 produtos</p>
+              <a class="button button-secondary button-small" href="contato.html#orcamento">Solicitar orçamento completo</a>
+            </div>
+
+            <div class="product-grid" data-product-grid></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-dark">
+        <div class="container">
+          <article class="promo-banner promo-banner-compact">
+            <img class="promo-banner-image" src="assets/img/banner-hero-premium-v2.png" alt="Banner automotivo premium da Vix">
+            <div class="promo-banner-copy">
+              <span class="eyebrow">Atendimento rápido</span>
+              <h2>Escolha a peça e chame a equipe sem perder tempo.</h2>
+              <p>O novo visual reforça a marca e deixa o catálogo mais convincente para venda e orçamento.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-panel">
+        <section class="footer-hero">
+          <div class="footer-hero-copy">
+            <span class="eyebrow">Atendimento Vix</span>
+            <h2>Encontrou a peça certa?</h2>
+            <p>
+              Abra o WhatsApp com rapidez ou envie a aplicação pelo formulário para receber opções compatíveis com o seu pedido.
+            </p>
+          </div>
+          <div class="footer-actions">
+            <a class="button button-primary" data-whatsapp-link href="https://wa.me/5527999998888">Chamar no WhatsApp</a>
+            <a class="button button-secondary" href="contato.html#orcamento">Abrir formulário</a>
+          </div>
+        </section>
+
+        <div class="footer-grid">
+          <div class="footer-brand-block">
+            <a class="brand brand-footer" href="index.html">
+              <img class="brand-logo brand-logo-footer" src="assets/img/logo-vix.png" alt="Logo da Vix Auto Peças e Acessórios">
+            </a>
+            <p class="footer-text">
+              Catálogo visualmente forte, busca simples e conversão direta para atendimento comercial via WhatsApp.
+            </p>
+            <div class="footer-tag-row">
+              <span>Catálogo</span>
+              <span>Aplicação</span>
+              <span>Orçamento</span>
+              <span>Entrega</span>
+            </div>
+          </div>
+
+          <div class="footer-column">
+            <h3>Navegação</h3>
+            <ul class="footer-list">
+              <li><a href="index.html">Início</a></li>
+              <li><a href="sobre.html">Sobre nós</a></li>
+              <li><a href="catalogo.html">Produtos</a></li>
+              <li><a href="index.html#marcas">Marcas</a></li>
+              <li><a href="contato.html">Contato</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column">
+            <h3>Categorias</h3>
+            <ul class="footer-list">
+              <li><a href="catalogo.html?categoria=motor">Peças de motor</a></li>
+              <li><a href="catalogo.html?categoria=freios">Sistema de freios</a></li>
+              <li><a href="catalogo.html?categoria=suspensao">Suspensão</a></li>
+              <li><a href="catalogo.html?categoria=eletrica">Elétrica</a></li>
+              <li><a href="catalogo.html?categoria=iluminacao">Iluminação</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column footer-contact-block">
+            <h3>Contato</h3>
+            <ul class="footer-list">
+              <li><a href="tel:+552733331234">(27) 3333-1234</a></li>
+              <li><a data-whatsapp-link href="https://wa.me/5527999998888">(27) 99999-8888</a></li>
+              <li>Av. Fernando Ferrari, 1450, Vitória - ES</li>
+            </ul>
+            <div class="footer-hours">
+              <strong>Horário</strong>
+              <span>Seg a sex: 8h às 18h</span>
+              <span>Sábado: 8h às 13h</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; <span data-current-year></span> Vix Auto Peças e Acessórios. Todos os direitos reservados.</p>
+          <p>Vitória - ES | Atendimento para varejo e oficinas</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <a class="floating-whatsapp" data-whatsapp-link href="https://wa.me/5527999998888" aria-label="Solicitar orçamento via WhatsApp">
+    WhatsApp
+  </a>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
