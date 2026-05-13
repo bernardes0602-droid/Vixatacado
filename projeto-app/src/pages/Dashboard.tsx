@@ -1,9 +1,11 @@
+import { useState, type FormEvent } from "react";
 import {
   BarChart3,
   Boxes,
   CheckCircle2,
   ClipboardList,
   Edit3,
+  KeyRound,
   ShieldCheck,
   ShoppingBag,
   Truck,
@@ -16,6 +18,7 @@ import type { UserRole } from "../lib/types";
 
 type DashboardProps = {
   role: UserRole;
+  userId?: string;
   onNavigate: (path: string) => void;
 };
 
@@ -27,7 +30,7 @@ const roleTitle: Record<UserRole, string> = {
   customer: "Painel do cliente"
 };
 
-export function Dashboard({ role, onNavigate }: DashboardProps) {
+export function Dashboard({ role, userId, onNavigate }: DashboardProps) {
   if (role === "guest") {
     return (
       <section className="section dashboard-page">
@@ -79,12 +82,31 @@ export function Dashboard({ role, onNavigate }: DashboardProps) {
       {role === "admin" ? <AdminDashboard pendingCustomers={pendingCustomers} /> : null}
       {role === "manager" ? <ManagerDashboard /> : null}
       {role === "seller" ? <SellerDashboard /> : null}
-      {role === "customer" ? <CustomerDashboard /> : null}
+      {role === "customer" ? <CustomerDashboard userId={userId} /> : null}
     </section>
   );
 }
 
 function AdminDashboard({ pendingCustomers }: { pendingCustomers: typeof customers }) {
+  const selectableCustomers = customers.filter((customer) => customer.status === "approved");
+  const [selectedCustomerId, setSelectedCustomerId] = useState(selectableCustomers[0]?.id ?? "");
+  const [newCustomerPassword, setNewCustomerPassword] = useState("");
+  const [passwordNotice, setPasswordNotice] = useState("");
+
+  function handleCustomerPasswordReset(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPasswordNotice("");
+
+    if (!selectedCustomerId || newCustomerPassword.trim().length < 6) {
+      setPasswordNotice("Informe um cliente aprovado e uma senha com pelo menos 6 caracteres.");
+      return;
+    }
+
+    const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId);
+    setPasswordNotice(`Senha de ${selectedCustomer?.company ?? "cliente"} atualizada no ambiente de teste.`);
+    setNewCustomerPassword("");
+  }
+
   return (
     <div className="dashboard-grid">
       <section className="admin-panel wide">
@@ -104,6 +126,42 @@ function AdminDashboard({ pendingCustomers }: { pendingCustomers: typeof custome
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="admin-panel wide">
+        <div className="panel-title">
+          <KeyRound size={20} />
+          <strong>Redefinir senha de cliente</strong>
+        </div>
+        <form className="password-form" onSubmit={handleCustomerPasswordReset}>
+          <label>
+            Cliente aprovado
+            <select value={selectedCustomerId} onChange={(event) => setSelectedCustomerId(event.target.value)}>
+              {selectableCustomers.map((customer) => (
+                <option value={customer.id} key={customer.id}>
+                  {customer.company} - {customer.document}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Nova senha
+            <input
+              type="password"
+              value={newCustomerPassword}
+              onChange={(event) => setNewCustomerPassword(event.target.value)}
+              placeholder="Defina uma nova senha"
+              autoComplete="new-password"
+            />
+          </label>
+          <button type="submit" className="primary-action full">
+            Alterar senha do cliente
+          </button>
+          {passwordNotice ? <div className="form-alert">{passwordNotice}</div> : null}
+          <small>
+            No Supabase real essa ação deve chamar uma função segura com service role. O painel não deve salvar senha em texto puro.
+          </small>
+        </form>
       </section>
 
       <section className="admin-panel">
@@ -260,7 +318,43 @@ function SellerDashboard() {
   );
 }
 
-function CustomerDashboard() {
+function CustomerDashboard({ userId }: { userId?: string }) {
+  const customer = customers.find((item) => item.id === userId) ?? customers.find((item) => item.id === "customer-03") ?? customers[0];
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+
+  function handlePasswordChange(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setPasswordMessage("");
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordMessage("Preencha a senha atual, a nova senha e a confirmação.");
+      return;
+    }
+
+    if (currentPassword !== customer.password) {
+      setPasswordMessage("Senha atual incorreta para o cliente de teste.");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordMessage("A nova senha precisa ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage("A confirmação não confere com a nova senha.");
+      return;
+    }
+
+    setPasswordMessage("Senha alterada no ambiente de teste.");
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+  }
+
   return (
     <div className="dashboard-grid">
       <section className="admin-panel wide">
@@ -292,6 +386,52 @@ function CustomerDashboard() {
           <span>Status</span>
           <strong>Cliente aprovado</strong>
         </p>
+        <p>
+          <span>CPF/CNPJ</span>
+          <strong>{customer.document}</strong>
+        </p>
+      </section>
+      <section className="admin-panel">
+        <div className="panel-title">
+          <KeyRound size={20} />
+          <strong>Alterar minha senha</strong>
+        </div>
+        <form className="password-form" onSubmit={handlePasswordChange}>
+          <label>
+            Senha atual
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(event) => setCurrentPassword(event.target.value)}
+              placeholder="Senha atual"
+              autoComplete="current-password"
+            />
+          </label>
+          <label>
+            Nova senha
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+              placeholder="Nova senha"
+              autoComplete="new-password"
+            />
+          </label>
+          <label>
+            Confirmar nova senha
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              placeholder="Repita a nova senha"
+              autoComplete="new-password"
+            />
+          </label>
+          <button type="submit" className="primary-action full">
+            Alterar senha
+          </button>
+          {passwordMessage ? <div className="form-alert">{passwordMessage}</div> : null}
+        </form>
       </section>
     </div>
   );
