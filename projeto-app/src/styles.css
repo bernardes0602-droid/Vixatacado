@@ -406,6 +406,12 @@ p {
   font-size: 0.82rem;
 }
 
+.ghost-action.small {
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+}
+
 .primary-action.full {
   width: 100%;
 }
@@ -1034,6 +1040,62 @@ del {
   padding: 22px;
 }
 
+.form-alert {
+  padding: 12px;
+  color: var(--soft);
+  font-size: 0.9rem;
+  font-weight: 800;
+  border: 1px solid rgba(245, 143, 17, 0.35);
+  background: rgba(245, 143, 17, 0.11);
+}
+
+.form-alert.is-error {
+  color: #fff;
+  border-color: rgba(211, 31, 42, 0.55);
+  background: rgba(211, 31, 42, 0.18);
+}
+
+.test-credential-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.test-credential-list > strong {
+  color: #fff;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+}
+
+.credential-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.credential-card span,
+.credential-card small {
+  display: block;
+}
+
+.credential-card span {
+  color: #fff;
+  font-weight: 900;
+}
+
+.credential-card small {
+  overflow: hidden;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .admin-login-actions,
 .cms-tags {
   display: grid;
@@ -1052,33 +1114,6 @@ del {
   text-align: center;
   border: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.05);
-}
-
-.auth-admin-shortcut {
-  grid-column: 1 / -1;
-  justify-self: start;
-}
-
-.system-status {
-  grid-column: 1 / -1;
-  padding: 16px;
-  border: 1px solid var(--line-strong);
-  background: rgba(243, 154, 18, 0.08);
-}
-
-.system-status.online {
-  border-color: rgba(41, 197, 111, 0.45);
-  background: rgba(41, 197, 111, 0.08);
-}
-
-.system-status strong,
-.system-status span {
-  display: block;
-}
-
-.system-status span {
-  color: var(--muted);
-  margin-top: 4px;
 }
 
 .tracking-card {
@@ -1294,6 +1329,35 @@ del {
 .admin-panel p span,
 .admin-panel p small {
   color: var(--muted);
+}
+
+.password-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.password-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.password-form input,
+.password-form select {
+  min-height: 44px;
+  padding: 0 12px;
+  color: var(--text);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.password-form small {
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .table-like {
@@ -1573,8 +1637,13 @@ del {
   }
 
   .table-like div,
-  .admin-panel p {
+  .admin-panel p,
+  .credential-card {
     grid-template-columns: 1fr;
+  }
+
+  .credential-card .ghost-action {
+    width: 100%;
   }
 
   .content-card img,
