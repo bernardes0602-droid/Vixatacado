@@ -14,3 +14,7 @@ export function normalize(text: string) {
     .toLowerCase()
     .trim();
 }
+
+export function onlyDigits(value: string) {
+  return value.replace(/\D/g, "");
+}
