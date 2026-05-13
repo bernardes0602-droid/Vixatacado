@@ -59,12 +59,24 @@ export type Customer = {
   id: string;
   name: string;
   company: string;
+  document: string;
   phone: string;
   email: string;
+  password: string;
   status: "pending" | "approved" | "blocked";
   sellerId?: string;
   city: string;
   segment: string;
+};
+
+export type TestLogin = {
+  id: string;
+  label: string;
+  role: Exclude<UserRole, "guest">;
+  login: string;
+  password: string;
+  target: string;
+  customerId?: string;
 };
 
 export type Seller = {
