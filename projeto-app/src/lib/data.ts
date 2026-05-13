@@ -1,4 +1,4 @@
-import type { Banner, BlogPost, Customer, Order, OrderStatus, Policy, Product, Seller } from "./types";
+import type { Banner, BlogPost, Customer, Order, OrderStatus, Policy, Product, Seller, TestLogin } from "./types";
 
 export const brandAssets = {
   logo: "/projeto/brand/logo-vix.png",
@@ -423,8 +423,10 @@ export const customers: Customer[] = [
     id: "customer-01",
     name: "Auto Center Vitória",
     company: "Auto Center Vitória Ltda",
+    document: "12.345.678/0001-90",
     phone: "(27) 99911-2211",
     email: "compras@autocentervitoria.com.br",
+    password: "cliente123",
     status: "approved",
     sellerId: "seller-01",
     city: "Vitória",
@@ -434,8 +436,10 @@ export const customers: Customer[] = [
     id: "customer-02",
     name: "Rápido Freios",
     company: "Rápido Freios ME",
+    document: "23.456.789/0001-10",
     phone: "(27) 98822-3311",
     email: "contato@rapidofreios.com.br",
+    password: "pendente123",
     status: "pending",
     city: "Serra",
     segment: "Centro automotivo"
@@ -444,12 +448,50 @@ export const customers: Customer[] = [
     id: "customer-03",
     name: "Cliente Balcão",
     company: "Pessoa física",
+    document: "123.456.789-09",
     phone: "(27) 97733-4411",
     email: "cliente@email.com",
+    password: "cliente123",
     status: "approved",
     sellerId: "seller-02",
     city: "Vila Velha",
     segment: "Varejo"
+  }
+];
+
+export const testLogins: TestLogin[] = [
+  {
+    id: "login-admin",
+    label: "Admin",
+    role: "admin",
+    login: "admin@vixatacado.com.br",
+    password: "admin123",
+    target: "/projeto/admin"
+  },
+  {
+    id: "login-manager",
+    label: "Gerente",
+    role: "manager",
+    login: "gerente@vixatacado.com.br",
+    password: "gerente123",
+    target: "/projeto/admin"
+  },
+  {
+    id: "login-seller",
+    label: "Vendedor",
+    role: "seller",
+    login: "vendedor@vixatacado.com.br",
+    password: "vendedor123",
+    target: "/projeto/admin"
+  },
+  {
+    id: "login-customer",
+    label: "Cliente aprovado",
+    role: "customer",
+    login: "123.456.789-09",
+    password: "cliente123",
+    target: "/projeto/cliente",
+    customerId: "customer-03"
   }
 ];
 
