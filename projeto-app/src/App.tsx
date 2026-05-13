@@ -22,8 +22,9 @@ function getLocationState() {
 
 export default function App() {
   const [locationState, setLocationState] = useState(getLocationState);
-  const [role, setRole] = useState<UserRole>("guest");
+  const [session, setSession] = useState<{ role: UserRole; userId?: string }>({ role: "guest" });
   const [cart, setCart] = useState<CartItem[]>([]);
+  const role = session.role;
 
   useEffect(() => {
     const onPopState = () => setLocationState(getLocationState());
@@ -63,8 +64,8 @@ export default function App() {
     setCart((current) => current.filter((item) => item.product.id !== productId));
   }
 
-  function loginAs(nextRole: UserRole, target: string) {
-    setRole(nextRole);
+  function loginAs(nextRole: UserRole, target: string, userId?: string) {
+    setSession({ role: nextRole, userId });
     navigate(target);
   }
 
@@ -133,19 +134,19 @@ export default function App() {
         />
       ) : null}
 
-      {route.page === "loginclientes" ? <Auth mode="client" onNavigate={navigate} onLogin={loginAs} /> : null}
-      {route.page === "loginadmin" ? <Auth mode="admin" onNavigate={navigate} onLogin={loginAs} /> : null}
+      {route.page === "loginclientes" ? <Auth mode="client" onLogin={loginAs} /> : null}
+      {route.page === "loginadmin" ? <Auth mode="admin" onLogin={loginAs} /> : null}
       {route.page === "admin" ? (
-        isInternalRole ? <Dashboard role={role} onNavigate={navigate} /> : <Auth mode="admin" onNavigate={navigate} onLogin={loginAs} />
+        isInternalRole ? <Dashboard role={role} userId={session.userId} onNavigate={navigate} /> : <Auth mode="admin" onLogin={loginAs} />
       ) : null}
       {route.page === "cliente" ? (
         role === "customer" ? (
           <>
-            <Dashboard role={role} onNavigate={navigate} />
+            <Dashboard role={role} userId={session.userId} onNavigate={navigate} />
             <Tracking />
           </>
         ) : (
-          <Auth mode="client" onNavigate={navigate} onLogin={loginAs} />
+          <Auth mode="client" onLogin={loginAs} />
         )
       ) : null}
       {route.page === "blog" ? <Blog /> : null}
