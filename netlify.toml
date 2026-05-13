@@ -1,2 +1,6 @@
 [build]
-  publish = "em-construcao"
+  command = "npm run build"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "20"

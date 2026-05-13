@@ -1,3 +1,7 @@
+/projeto/assets/* /projeto/assets/:splat 200
+/projeto/brand/* /projeto/brand/:splat 200
+/projeto /projeto/index.html 200
+/projeto/* /projeto/index.html 200
 /em-construcao/assets/* /em-construcao/assets/:splat 200
 /assets/styles.css /em-construcao/assets/styles.css 200!
 /assets/img/logo-vix.png /em-construcao/assets/img/logo-vix.png 200!
