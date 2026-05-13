@@ -33,7 +33,7 @@ export function Dashboard({ role, onNavigate }: DashboardProps) {
       <section className="section dashboard-page">
         <div className="empty-state">
           Acesse como cliente, vendedor, gerente ou admin para visualizar os painéis.
-          <button type="button" className="primary-action" onClick={() => onNavigate("/projeto/login")}>
+          <button type="button" className="primary-action" onClick={() => onNavigate("/projeto/loginclientes")}>
             Ir para login
           </button>
         </div>
@@ -50,7 +50,7 @@ export function Dashboard({ role, onNavigate }: DashboardProps) {
       <div className="section-heading">
         <span className="eyebrow">Sistema Vix</span>
         <h1>{roleTitle[role]}</h1>
-        <p>Visões separadas por permissão para admin, gerente, vendedor e cliente, com base preparada para Supabase RLS.</p>
+        <p>Área de trabalho com permissões separadas para conteúdo, catálogo, clientes, vendedores, pedidos e acompanhamento.</p>
       </div>
 
       <div className="kpi-grid">
@@ -139,10 +139,10 @@ function AdminDashboard({ pendingCustomers }: { pendingCustomers: typeof custome
       <section className="admin-panel">
         <div className="panel-title">
           <Edit3 size={20} />
-          <strong>Conteúdo e SEO</strong>
+          <strong>CMS completo</strong>
         </div>
         <p>
-          <span>Banners ativos</span>
+          <span>Banners da home</span>
           <strong>{banners.filter((banner) => banner.active).length}</strong>
         </p>
         <p>
@@ -150,9 +150,37 @@ function AdminDashboard({ pendingCustomers }: { pendingCustomers: typeof custome
           <strong>{blogPosts.filter((post) => post.status === "published").length}</strong>
         </p>
         <p>
-          <span>Rodapé, políticas e FAQ</span>
-          <strong>CMS pronto</strong>
+          <span>Home, rodapé e políticas</span>
+          <strong>Editável</strong>
         </p>
+        <p>
+          <span>SEO, marcas e Instagram</span>
+          <strong>Editável</strong>
+        </p>
+      </section>
+
+      <section className="admin-panel wide">
+        <div className="panel-title">
+          <Edit3 size={20} />
+          <strong>Conteúdo editável pelo admin</strong>
+        </div>
+        <div className="cms-tags">
+          <span>Banners rotativos</span>
+          <span>Home</span>
+          <span>Produtos</span>
+          <span>Categorias</span>
+          <span>Marcas</span>
+          <span>Aplicações</span>
+          <span>Clientes</span>
+          <span>Vendedores</span>
+          <span>Pedidos</span>
+          <span>Transportadoras</span>
+          <span>Políticas</span>
+          <span>Rodapé</span>
+          <span>Blog</span>
+          <span>Instagram</span>
+          <span>SEO</span>
+        </div>
       </section>
     </div>
   );
@@ -238,7 +266,7 @@ function CustomerDashboard() {
       <section className="admin-panel wide">
         <div className="panel-title">
           <Truck size={20} />
-          <strong>Meus pedidos</strong>
+          <strong>Meus pedidos e rastreio</strong>
         </div>
         <div className="table-like">
           {orders.map((order) => (

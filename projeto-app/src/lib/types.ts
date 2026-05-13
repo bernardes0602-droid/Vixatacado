@@ -115,3 +115,13 @@ export type Banner = {
   active: boolean;
   order: number;
 };
+
+export type Policy = {
+  slug: string;
+  title: string;
+  summary: string;
+  sections: Array<{
+    heading: string;
+    text: string;
+  }>;
+};

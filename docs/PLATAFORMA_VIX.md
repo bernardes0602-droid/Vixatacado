@@ -38,6 +38,7 @@ A migration cria:
 - carrinhos, itens, pedidos e itens do pedido;
 - transportadoras, frete, rastreio e histórico de status;
 - banners, blog, páginas, configurações e Instagram manual.
+- políticas comerciais, frete, devolução, privacidade, reembolso e termos.
 
 RLS:
 

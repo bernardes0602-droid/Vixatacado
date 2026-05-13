@@ -111,7 +111,7 @@ export function Cart({ cart, role, onUpdateQuantity, onRemove, onNavigate }: Car
                 Enviar pedido
               </a>
             ) : (
-              <button type="button" className="primary-action big full" onClick={() => onNavigate("/projeto/login")}>
+              <button type="button" className="primary-action big full" onClick={() => onNavigate("/projeto/loginclientes")}>
                 Solicitar cadastro
               </button>
             )}

@@ -1,4 +1,4 @@
-import type { Banner, BlogPost, Customer, Order, OrderStatus, Product, Seller } from "./types";
+import type { Banner, BlogPost, Customer, Order, OrderStatus, Policy, Product, Seller } from "./types";
 
 export const brandAssets = {
   logo: "/projeto/brand/logo-vix.png",
@@ -26,7 +26,21 @@ export const categories = [
   "Acessórios"
 ];
 
-export const brands = ["Bosch", "Cofap", "Nakata", "Sachs", "Mann Filter", "Mahle", "NGK", "Fremax", "Tecfil", "Arteb"];
+export const brands = [
+  "Bosch",
+  "Cofap",
+  "Nakata",
+  "Sachs",
+  "Mann Filter",
+  "Mahle",
+  "NGK",
+  "Fremax",
+  "Tecfil",
+  "Arteb",
+  "Hipper Freios",
+  "Moura",
+  "Philips"
+];
 
 export const products: Product[] = [
   {
@@ -258,8 +272,8 @@ export const products: Product[] = [
 export const banners: Banner[] = [
   {
     id: "bn-hero",
-    title: "Autopeças com operação comercial de alta performance",
-    subtitle: "Catálogo avançado, CRM, pedidos e atendimento para oficinas, varejo e clientes recorrentes.",
+    title: "Autopeças para sua loja, oficina e manutenção",
+    subtitle: "Peças selecionadas, marcas confiáveis e atendimento rápido para Vitória e região.",
     cta: "Explorar catálogo",
     image: brandAssets.hero,
     active: true,
@@ -267,12 +281,123 @@ export const banners: Banner[] = [
   },
   {
     id: "bn-catalog",
-    title: "Peças para motor, freios, suspensão, elétrica e filtros",
-    subtitle: "Produtos organizados por aplicação, código, marca, veículo e ano.",
+    title: "Freios, motor, suspensão e elétrica em destaque",
+    subtitle: "Encontre por aplicação, veículo, ano, marca, SKU ou código de fabricante.",
     cta: "Ver destaques",
     image: brandAssets.parts,
     active: true,
     order: 2
+  },
+  {
+    id: "bn-workshop",
+    title: "Atendimento direto para oficinas e clientes",
+    subtitle: "Monte seu pedido, fale com o vendedor responsável e acompanhe tudo pelo acesso do cliente.",
+    cta: "Entrar como cliente",
+    image: brandAssets.hero,
+    active: true,
+    order: 3
+  },
+  {
+    id: "bn-promos",
+    title: "Produtos de revisão com orçamento rápido",
+    subtitle: "Filtros, pastilhas, baterias e iluminação para pedidos de giro e reposição.",
+    cta: "Ver promoções",
+    image: brandAssets.parts,
+    active: true,
+    order: 4
+  }
+];
+
+export const policies: Policy[] = [
+  {
+    slug: "politica-de-frete",
+    title: "Política de Frete",
+    summary: "Condições de envio, prazos, transportadoras e retirada conforme disponibilidade.",
+    sections: [
+      {
+        heading: "Prazos e disponibilidade",
+        text: "Os prazos são informados após confirmação de estoque, endereço de entrega e modalidade escolhida."
+      },
+      {
+        heading: "Transportadoras",
+        text: "Pedidos podem seguir por entrega própria, transportadora parceira ou retirada, conforme região e operação."
+      }
+    ]
+  },
+  {
+    slug: "politica-de-devolucao",
+    title: "Política de Devolução",
+    summary: "Regras para devolução de produtos sem uso, com embalagem e documentação.",
+    sections: [
+      {
+        heading: "Condição do produto",
+        text: "A devolução exige produto sem instalação, sem marcas de uso e com embalagem original preservada."
+      },
+      {
+        heading: "Análise técnica",
+        text: "Peças instaladas ou com indício de mau uso passam por avaliação antes de qualquer troca ou crédito."
+      }
+    ]
+  },
+  {
+    slug: "politica-comercial",
+    title: "Política Comercial",
+    summary: "Condições para orçamento, preços, disponibilidade, aprovação de cadastro e atendimento.",
+    sections: [
+      {
+        heading: "Orçamentos",
+        text: "Preços e disponibilidade podem variar conforme estoque, marca, campanha e confirmação do vendedor."
+      },
+      {
+        heading: "Clientes aprovados",
+        text: "Compras pela plataforma dependem de cadastro aprovado e vínculo com vendedor responsável."
+      }
+    ]
+  },
+  {
+    slug: "politica-de-privacidade",
+    title: "Política de Privacidade",
+    summary: "Como dados de cadastro, contato, pedidos e atendimento são utilizados.",
+    sections: [
+      {
+        heading: "Uso dos dados",
+        text: "Os dados são usados para atendimento, orçamento, cadastro, faturamento, entrega e comunicação comercial."
+      },
+      {
+        heading: "Segurança",
+        text: "O acesso aos dados segue permissões por perfil e regras de segurança no banco de dados."
+      }
+    ]
+  },
+  {
+    slug: "politica-de-reembolso",
+    title: "Política de Reembolso",
+    summary: "Critérios para reembolso, crédito ou troca após análise do pedido.",
+    sections: [
+      {
+        heading: "Elegibilidade",
+        text: "Reembolso depende da análise da solicitação, condição do produto e conformidade com as regras comerciais."
+      },
+      {
+        heading: "Forma de devolução",
+        text: "Quando aprovado, o reembolso segue o meio de pagamento utilizado ou crédito comercial acordado."
+      }
+    ]
+  },
+  {
+    slug: "termos-de-uso",
+    title: "Termos de Uso",
+    summary: "Regras de uso do catálogo, painel de cliente, pedidos e conteúdos da plataforma.",
+    sections: [
+      {
+        heading: "Uso da plataforma",
+        text: "O catálogo é informativo e pedidos dependem de confirmação comercial, disponibilidade e aprovação de cadastro."
+      },
+      {
+        heading: "Atualizações",
+        text: "A Vix pode atualizar produtos, preços, políticas, textos e regras operacionais pelo painel administrativo."
+      }
+    ]
   }
 ];
 
@@ -350,7 +475,7 @@ export const orders: Order[] = [
     freight: 69.9,
     carrier: "Entrega Vix Express",
     trackingCode: "VIXEXP0018",
-    trackingUrl: "https://vixatacado.com.br/projeto/rastreio",
+    trackingUrl: "https://vixatacado.com.br/projeto/cliente",
     deliveryEstimate: "14/05/2026",
     createdAt: "2026-05-12",
     items: [
@@ -367,7 +492,7 @@ export const orders: Order[] = [
     freight: 45,
     carrier: "Transportadora parceira",
     trackingCode: "TRK918273",
-    trackingUrl: "https://vixatacado.com.br/projeto/rastreio",
+    trackingUrl: "https://vixatacado.com.br/projeto/cliente",
     deliveryEstimate: "13/05/2026",
     createdAt: "2026-05-12",
     items: [

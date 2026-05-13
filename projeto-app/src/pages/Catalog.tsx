@@ -9,19 +9,21 @@ type CatalogProps = {
   role: UserRole;
   initialSearch: string;
   initialCategory: string;
+  initialBrand: string;
+  initialPromoOnly: boolean;
   onAdd: (product: Product) => void;
   onNavigate: (path: string) => void;
 };
 
 type SortKey = "priority" | "price-asc" | "price-desc" | "newest" | "best-seller" | "az";
 
-export function Catalog({ role, initialSearch, initialCategory, onAdd, onNavigate }: CatalogProps) {
+export function Catalog({ role, initialSearch, initialCategory, initialBrand, initialPromoOnly, onAdd, onNavigate }: CatalogProps) {
   const [search, setSearch] = useState(initialSearch);
   const [category, setCategory] = useState(initialCategory);
-  const [brand, setBrand] = useState("Todas");
+  const [brand, setBrand] = useState(initialBrand);
   const [automaker, setAutomaker] = useState("Todas");
   const [year, setYear] = useState("");
-  const [promoOnly, setPromoOnly] = useState(false);
+  const [promoOnly, setPromoOnly] = useState(initialPromoOnly);
   const [sort, setSort] = useState<SortKey>("priority");
 
   const automakers = useMemo(() => ["Todas", ...Array.from(new Set(products.map((product) => product.automaker)))], []);

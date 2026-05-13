@@ -1,5 +1,6 @@
 import { ArrowRight, BadgeCheck, Boxes, Building2, Gauge, MessageCircle, ShieldCheck, Truck } from "lucide-react";
-import { banners, blogPosts, brandAssets, brands, categories, contacts, instagramFallback, products } from "../lib/data";
+import { useEffect, useMemo, useState } from "react";
+import { banners, blogPosts, brandAssets, categories, contacts, instagramFallback, products } from "../lib/data";
 import { buildWhatsAppUrl, currency } from "../lib/format";
 import type { Product } from "../lib/types";
 import { ProductCard } from "../components/ProductCard";
@@ -12,23 +13,52 @@ type HomeProps = {
 };
 
 export function Home({ role, onNavigate, onAdd }: HomeProps) {
-  const hero = banners[0];
+  const activeBanners = useMemo(() => banners.filter((banner) => banner.active).sort((a, b) => a.order - b.order), []);
+  const [activeBannerIndex, setActiveBannerIndex] = useState(0);
+  const [activeBrand, setActiveBrand] = useState(products[0]?.brand ?? "");
+  const hero = activeBanners[activeBannerIndex] ?? activeBanners[0];
   const featured = products.filter((product) => product.featured).slice(0, 3);
+  const brandNames = Array.from(new Set(products.map((product) => product.brand)));
+  const brandProducts = products.filter((product) => product.brand === activeBrand);
   const whatsappUrl = buildWhatsAppUrl(
     contacts.commercialWhatsapp,
     "Olá! Quero atendimento comercial pela plataforma Vix Atacado."
   );
 
+  useEffect(() => {
+    if (activeBanners.length <= 1) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveBannerIndex((current) => (current + 1) % activeBanners.length);
+    }, 10000);
+
+    return () => window.clearInterval(timer);
+  }, [activeBanners.length]);
+
+  function bannerTarget() {
+    if (hero.id === "bn-workshop") {
+      return "/projeto/loginclientes";
+    }
+
+    if (hero.id === "bn-promos") {
+      return "/projeto/catalogo?promocoes=1";
+    }
+
+    return "/projeto/catalogo";
+  }
+
   return (
     <>
       <section className="hero" style={{ backgroundImage: `linear-gradient(90deg, rgba(5,5,6,.94), rgba(5,5,6,.55)), url(${hero.image})` }}>
         <div className="hero-content">
-          <span className="eyebrow">Projeto em teste / Vix Atacado</span>
+          <span className="eyebrow">Vix Auto Peças e Acessórios</span>
           <h1>{hero.title}</h1>
           <p>{hero.subtitle}</p>
 
           <div className="hero-actions">
-            <button type="button" className="primary-action big" onClick={() => onNavigate("/projeto/catalogo")}>
+            <button type="button" className="primary-action big" onClick={() => onNavigate(bannerTarget())}>
               {hero.cta}
               <ArrowRight size={18} />
             </button>
@@ -38,10 +68,22 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
             </a>
           </div>
 
+          <div className="banner-controls" aria-label="Banners da home">
+            {activeBanners.map((banner, index) => (
+              <button
+                key={banner.id}
+                type="button"
+                className={index === activeBannerIndex ? "is-active" : ""}
+                onClick={() => setActiveBannerIndex(index)}
+                aria-label={`Abrir banner ${index + 1}: ${banner.title}`}
+              />
+            ))}
+          </div>
+
           <div className="hero-stats" aria-label="Indicadores da plataforma">
             <span>
               <strong>{products.length}</strong>
-              Produtos modelo
+              Produtos em vitrine
             </span>
             <span>
               <strong>{categories.length}</strong>
@@ -55,11 +97,36 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
         </div>
       </section>
 
+      <section className="section hero-products-section">
+        <div className="section-heading inline-heading">
+          <div>
+            <span className="eyebrow">Vitrine de produtos</span>
+            <h2>Produtos em destaque já na página inicial.</h2>
+          </div>
+          <button type="button" className="ghost-action" onClick={() => onNavigate("/projeto/catalogo")}>
+            Ver todos
+            <ArrowRight size={16} />
+          </button>
+        </div>
+
+        <div className="product-grid compact-products">
+          {products.slice(0, 3).map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              role={role}
+              onAdd={onAdd}
+              onOpen={(slug) => onNavigate(`/projeto/produto/${slug}`)}
+            />
+          ))}
+        </div>
+      </section>
+
       <section className="section surface-section">
         <div className="section-heading">
           <span className="eyebrow">Catálogo automotivo</span>
-          <h2>Busca por peça, SKU, código, marca, veículo, aplicação e ano.</h2>
-          <p>Estrutura preparada para operar como catálogo, balcão digital, orçamento e pedido integrado ao vendedor responsável.</p>
+          <h2>Encontre a peça certa com menos tempo de balcão.</h2>
+          <p>Busque por nome, SKU, código de fabricante, marca, veículo, ano ou aplicação automotiva.</p>
         </div>
 
         <div className="category-track">
@@ -77,11 +144,11 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
           <img src={brandAssets.parts} alt="Catálogo visual de autopeças Vix Atacado" loading="lazy" />
         </div>
         <div className="copy-panel">
-          <span className="eyebrow">Conversão comercial</span>
-          <h2>Do catálogo ao WhatsApp do vendedor com pedido estruturado.</h2>
+          <span className="eyebrow">Atendimento Vix</span>
+          <h2>Pedido organizado e conversa direta com o vendedor.</h2>
           <p>
-            O fluxo foi desenhado para visitante visualizar produtos, cliente aprovado comprar, vendedor acompanhar carteira e admin controlar CMS,
-            produtos, pedidos, banners, SEO e operação.
+            O cliente monta o pedido, informa a aplicação e encaminha tudo para o vendedor responsável com produtos,
+            códigos, quantidades e valores.
           </p>
           <div className="feature-list">
             <span>
@@ -90,11 +157,11 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
             </span>
             <span>
               <Truck size={18} />
-              Pedido com rastreio e status visual
+              Rastreio dentro do acesso do cliente
             </span>
             <span>
               <ShieldCheck size={18} />
-              Arquitetura pronta para Supabase RLS
+              Acesso seguro por perfil
             </span>
           </div>
         </div>
@@ -104,7 +171,7 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
         <div className="section-heading inline-heading">
           <div>
             <span className="eyebrow">Produtos em destaque</span>
-            <h2>Peças priorizadas para vitrine, campanhas e giro comercial.</h2>
+            <h2>Peças selecionadas para revisão, oficina e reposição.</h2>
           </div>
           <button type="button" className="ghost-action" onClick={() => onNavigate("/projeto/catalogo")}>
             Ver catálogo completo
@@ -127,9 +194,9 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
 
       <section className="section ops-grid">
         {[
-          { icon: Boxes, title: "CMS de catálogo", text: "Produtos, categorias, marcas, aplicações, banners, blog e SEO editáveis pelo admin." },
-          { icon: Building2, title: "CRM comercial", text: "Clientes aprovados, carteira por vendedor e visão por gerente." },
-          { icon: Gauge, title: "Dashboards", text: "Pedidos, faturamento, clientes, equipe, estoque e indicadores de conversão." }
+          { icon: Boxes, title: "Catálogo sempre atualizado", text: "Produtos, categorias, marcas, aplicações, banners e SEO controlados pelo admin." },
+          { icon: Building2, title: "Carteira por vendedor", text: "Clientes aprovados são vinculados a vendedores para atendimento mais rápido." },
+          { icon: Gauge, title: "Controle da operação", text: "Pedidos, clientes, produtos, conteúdos e políticas ficam no painel administrativo." }
         ].map((item) => (
           <article key={item.title} className="ops-card">
             <item.icon size={24} />
@@ -141,14 +208,46 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
 
       <section className="section brand-section">
         <div className="section-heading">
-          <span className="eyebrow">Marcas e conteúdos</span>
-          <h2>Base preparada para SEO, autoridade e recorrência.</h2>
+          <span className="eyebrow">Marcas</span>
+          <h2>Clique em uma marca para ver os produtos relacionados.</h2>
         </div>
 
         <div className="brand-cloud">
-          {brands.map((brand) => (
-            <span key={brand}>{brand}</span>
+          {brandNames.map((brand) => (
+            <button
+              key={brand}
+              type="button"
+              className={brand === activeBrand ? "is-active" : ""}
+              onClick={() => setActiveBrand(brand)}
+            >
+              {brand}
+            </button>
           ))}
+        </div>
+
+        <div className="brand-products-panel">
+          <div className="section-heading inline-heading">
+            <div>
+              <span className="eyebrow">{activeBrand}</span>
+              <h3>{brandProducts.length} produto{brandProducts.length === 1 ? "" : "s"} encontrado{brandProducts.length === 1 ? "" : "s"}</h3>
+            </div>
+            <button type="button" className="ghost-action" onClick={() => onNavigate(`/projeto/catalogo?marca=${encodeURIComponent(activeBrand)}`)}>
+              Ver no catálogo
+              <ArrowRight size={16} />
+            </button>
+          </div>
+
+          <div className="product-grid compact-products">
+            {brandProducts.slice(0, 3).map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                role={role}
+                onAdd={onAdd}
+                onOpen={(slug) => onNavigate(`/projeto/produto/${slug}`)}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="content-grid">
@@ -177,7 +276,7 @@ export function Home({ role, onNavigate, onAdd }: HomeProps) {
       <section className="section cta-section">
         <div>
           <span className="eyebrow">Pedido inteligente</span>
-          <h2>Valor estimado no carrinho, registro no banco e envio para WhatsApp do vendedor.</h2>
+          <h2>Monte seu orçamento e envie direto para a equipe comercial.</h2>
           <p>Exemplo de subtotal atual por item destacado: {currency.format(products[0].promoPrice ?? products[0].price)}</p>
         </div>
         <button type="button" className="primary-action big" onClick={() => onNavigate("/projeto/carrinho")}>

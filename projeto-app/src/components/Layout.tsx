@@ -1,8 +1,6 @@
 import {
-  BarChart3,
   Car,
   ClipboardList,
-  LayoutDashboard,
   LogIn,
   Menu,
   MessageCircle,
@@ -13,7 +11,7 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { brandAssets, contacts } from "../lib/data";
+import { brandAssets, contacts, policies } from "../lib/data";
 import { buildWhatsAppUrl } from "../lib/format";
 import type { CartItem, UserRole } from "../lib/types";
 
@@ -23,26 +21,16 @@ type LayoutProps = {
   role: UserRole;
   cart: CartItem[];
   onNavigate: (path: string) => void;
-  onRoleChange: (role: UserRole) => void;
 };
 
 const navItems = [
   { path: "/projeto", label: "Home" },
   { path: "/projeto/catalogo", label: "Catálogo" },
-  { path: "/projeto/blog", label: "Conteúdos" },
-  { path: "/projeto/rastreio", label: "Rastreio" },
-  { path: "/projeto/dashboard", label: "Painel" }
+  { path: "/projeto/marcas", label: "Marcas" },
+  { path: "/projeto/blog", label: "Conteúdos" }
 ];
 
-const roleLabels: Record<UserRole, string> = {
-  guest: "Visitante",
-  admin: "Admin",
-  manager: "Gerente",
-  seller: "Vendedor",
-  customer: "Cliente"
-};
-
-export function Layout({ children, currentPath, role, cart, onNavigate, onRoleChange }: LayoutProps) {
+export function Layout({ children, currentPath, role, cart, onNavigate }: LayoutProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const cartQuantity = cart.reduce((total, item) => total + item.quantity, 0);
   const whatsappUrl = buildWhatsAppUrl(
@@ -54,6 +42,14 @@ export function Layout({ children, currentPath, role, cart, onNavigate, onRoleCh
     setMenuOpen(false);
     onNavigate(path);
   }
+
+  const accountPath =
+    role === "admin" || role === "manager" || role === "seller"
+      ? "/projeto/admin"
+      : role === "customer"
+        ? "/projeto/cliente"
+        : "/projeto/loginclientes";
+  const accountLabel = role === "customer" ? "Minha conta" : "Área do cliente";
 
   return (
     <div className="app-shell">
@@ -82,17 +78,9 @@ export function Layout({ children, currentPath, role, cart, onNavigate, onRoleCh
           </div>
 
           <div className="header-actions">
-            <select value={role} onChange={(event) => onRoleChange(event.target.value as UserRole)} aria-label="Perfil de teste">
-              {Object.entries(roleLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-
-            <button className="header-link" type="button" onClick={() => goTo("/projeto/login")}>
+            <button className="header-link" type="button" onClick={() => goTo(accountPath)}>
               <LogIn size={18} />
-              Entrar
+              {accountLabel}
             </button>
 
             <button className="cart-button" type="button" onClick={() => goTo("/projeto/carrinho")} aria-label="Abrir carrinho">
@@ -134,7 +122,7 @@ export function Layout({ children, currentPath, role, cart, onNavigate, onRoleCh
       <footer className="main-footer">
         <div className="footer-brand">
           <img src={brandAssets.logo} alt="Logo Vix Auto Peças e Acessórios" />
-          <p>Plataforma em teste para catálogo automotivo, CRM, pedidos e atendimento comercial.</p>
+          <p>Autopeças, acessórios, pedidos e atendimento comercial para oficinas, lojas e clientes aprovados.</p>
         </div>
 
         <div className="footer-columns">
@@ -144,9 +132,9 @@ export function Layout({ children, currentPath, role, cart, onNavigate, onRoleCh
               <Car size={16} />
               Catálogo automotivo
             </button>
-            <button type="button" onClick={() => goTo("/projeto/dashboard")}>
-              <LayoutDashboard size={16} />
-              Painel administrativo
+            <button type="button" onClick={() => goTo("/projeto/marcas")}>
+              <Car size={16} />
+              Produtos por marca
             </button>
           </div>
           <div>
@@ -155,9 +143,9 @@ export function Layout({ children, currentPath, role, cart, onNavigate, onRoleCh
               <ClipboardList size={16} />
               Pedidos e orçamento
             </button>
-            <button type="button" onClick={() => goTo("/projeto/rastreio")}>
-              <BarChart3 size={16} />
-              Acompanhamento
+            <button type="button" onClick={() => goTo("/projeto/loginclientes")}>
+              <UserRound size={16} />
+              Acesso do cliente
             </button>
           </div>
           <div>
@@ -170,6 +158,14 @@ export function Layout({ children, currentPath, role, cart, onNavigate, onRoleCh
               <UserRound size={16} />
               {contacts.email}
             </a>
+          </div>
+          <div>
+            <h3>Políticas</h3>
+            {policies.map((policy) => (
+              <button key={policy.slug} type="button" onClick={() => goTo(`/projeto/politicas/${policy.slug}`)}>
+                {policy.title}
+              </button>
+            ))}
           </div>
         </div>
       </footer>

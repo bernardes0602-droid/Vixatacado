@@ -264,6 +264,18 @@ create table if not exists public.pages (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.policies (
+  id uuid primary key default gen_random_uuid(),
+  slug text not null unique,
+  title text not null,
+  summary text,
+  body jsonb not null default '[]'::jsonb,
+  seo_title text,
+  seo_description text,
+  published boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.settings (
   key text primary key,
   value jsonb not null,
@@ -339,6 +351,7 @@ alter table public.order_status_history enable row level security;
 alter table public.banners enable row level security;
 alter table public.blog_posts enable row level security;
 alter table public.pages enable row level security;
+alter table public.policies enable row level security;
 alter table public.settings enable row level security;
 alter table public.instagram_posts enable row level security;
 
@@ -530,6 +543,13 @@ create policy "public read published pages" on public.pages
 for select using (published = true or public.is_seller());
 
 create policy "admin manage pages" on public.pages
+for all using (public.is_admin())
+with check (public.is_admin());
+
+create policy "public read published policies" on public.policies
+for select using (published = true or public.is_seller());
+
+create policy "admin manage policies" on public.policies
 for all using (public.is_admin())
 with check (public.is_admin());
 

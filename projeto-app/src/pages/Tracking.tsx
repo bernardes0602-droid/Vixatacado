@@ -10,9 +10,9 @@ export function Tracking() {
   return (
     <section className="section tracking-page">
       <div className="section-heading">
-        <span className="eyebrow">Acompanhamento de entrega</span>
-        <h1>Status visual de orçamento, separação, transporte e entrega.</h1>
-        <p>Admin e vendedor atualizam o pedido. Cliente acompanha etapa, datas, observações e rastreio.</p>
+        <span className="eyebrow">Dentro da área do cliente</span>
+        <h1>Acompanhe pedido, transporte e previsão de entrega.</h1>
+        <p>O cliente visualiza etapa atual, transportadora, código de rastreio, previsão e histórico do pedido.</p>
       </div>
 
       <div className="tracking-card">
