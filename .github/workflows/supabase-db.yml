@@ -1,0 +1,39 @@
+name: Supabase DB Migrations
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - "supabase/**"
+
+jobs:
+  push-migrations:
+    name: Push SQL migrations
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Validate required secret
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "Missing SUPABASE_DB_URL secret."
+            exit 1
+          fi
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+
+      - name: Apply migrations to Supabase
+        run: supabase db push --db-url "$SUPABASE_DB_URL" --include-all
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}

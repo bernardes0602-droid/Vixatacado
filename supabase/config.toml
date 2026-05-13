@@ -1,0 +1,26 @@
+project_id = "vixatacado"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+major_version = 15
+
+[studio]
+enabled = true
+
+[auth]
+enabled = true
+site_url = "https://vixatacado.com.br/projeto"
+additional_redirect_urls = [
+  "https://vixatacado.com.br/projeto/loginclientes",
+  "https://vixatacado.com.br/projeto/loginadmin",
+  "http://localhost:5173/projeto/loginclientes",
+  "http://localhost:5173/projeto/loginadmin"
+]
+
+[storage]
+enabled = true
