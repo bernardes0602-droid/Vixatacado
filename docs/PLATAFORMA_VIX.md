@@ -57,7 +57,21 @@ RLS:
 5. Cliente adiciona produtos ao carrinho.
 6. Pedido é registrado no banco e enviado ao WhatsApp do vendedor.
 7. Vendedor/admin atualiza status, frete, transportadora e rastreio.
-8. Cliente acompanha pelo painel e pela tela de rastreio.
+8. Cliente acompanha pedidos e rastreio somente dentro do painel autenticado.
+
+## Acessos de teste
+
+Área interna: `https://vixatacado.com.br/projeto/loginadmin`
+
+- Admin: `admin@vixatacado.com.br` / `admin123`
+- Gerente: `gerente@vixatacado.com.br` / `gerente123`
+- Vendedor: `vendedor@vixatacado.com.br` / `vendedor123`
+
+Área do cliente: `https://vixatacado.com.br/projeto/loginclientes`
+
+- Cliente aprovado: `123.456.789-09` / `cliente123`
+
+O login do cliente é por CPF ou CNPJ cadastrado. No mock local as senhas ficam apenas em dados de teste; na integração final devem ser tratadas pelo Supabase Auth. Cliente pode alterar a própria senha no painel e admin pode solicitar redefinição pelo painel interno.
 
 ## Deploy Netlify
 
