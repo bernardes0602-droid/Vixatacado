@@ -1,17 +1,74 @@
+import { useState, type FormEvent } from "react";
 import { KeyRound, LockKeyhole, ShieldCheck, UserPlus } from "lucide-react";
-import { isSupabaseConfigured } from "../lib/supabase";
-import type { UserRole } from "../lib/types";
+import { customers, testLogins } from "../lib/data";
+import { onlyDigits } from "../lib/format";
+import type { TestLogin, UserRole } from "../lib/types";
 
 type AuthMode = "admin" | "client";
 
 type AuthProps = {
   mode: AuthMode;
-  onNavigate: (path: string) => void;
-  onLogin: (role: UserRole, target: string) => void;
+  onLogin: (role: UserRole, target: string, userId?: string) => void;
 };
 
-export function Auth({ mode, onNavigate, onLogin }: AuthProps) {
+export function Auth({ mode, onLogin }: AuthProps) {
   const isAdmin = mode === "admin";
+  const visibleCredentials = testLogins.filter((credential) => (isAdmin ? credential.role !== "customer" : credential.role === "customer"));
+  const defaultCredential = visibleCredentials[0];
+  const [identifier, setIdentifier] = useState(defaultCredential?.login ?? "");
+  const [password, setPassword] = useState(defaultCredential?.password ?? "");
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+
+  function fillCredential(credential: TestLogin) {
+    setIdentifier(credential.login);
+    setPassword(credential.password);
+    setError("");
+    setNotice(`Dados de ${credential.label.toLowerCase()} preenchidos para teste.`);
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+    setNotice("");
+
+    if (!identifier.trim() || !password.trim()) {
+      setError("Informe o login e a senha para continuar.");
+      return;
+    }
+
+    if (isAdmin) {
+      const matchedCredential = testLogins.find(
+        (credential) =>
+          credential.role !== "customer" &&
+          credential.login.toLowerCase() === identifier.trim().toLowerCase() &&
+          credential.password === password
+      );
+
+      if (!matchedCredential) {
+        setError("E-mail ou senha inválidos para o acesso interno.");
+        return;
+      }
+
+      onLogin(matchedCredential.role, matchedCredential.target);
+      return;
+    }
+
+    const documentDigits = onlyDigits(identifier);
+    const matchedCustomer = customers.find((customer) => onlyDigits(customer.document) === documentDigits);
+
+    if (!matchedCustomer || matchedCustomer.password !== password) {
+      setError("CPF/CNPJ ou senha inválidos.");
+      return;
+    }
+
+    if (matchedCustomer.status !== "approved") {
+      setError("Cadastro localizado, mas ainda não aprovado pelo administrador.");
+      return;
+    }
+
+    onLogin("customer", "/projeto/cliente", matchedCustomer.id);
+  }
 
   return (
     <section className="section auth-page">
@@ -41,40 +98,66 @@ export function Auth({ mode, onNavigate, onLogin }: AuthProps) {
       </div>
 
       <div className="auth-grid">
-        <form className="auth-card">
+        <form className="auth-card" onSubmit={handleSubmit}>
           <h2>{isAdmin ? "Login administrativo" : "Login do cliente"}</h2>
           <label>
-            E-mail
-            <input type="email" placeholder={isAdmin ? "admin@vixatacado.com.br" : "cliente@empresa.com.br"} />
+            {isAdmin ? "E-mail" : "CPF ou CNPJ cadastrado"}
+            <input
+              type={isAdmin ? "email" : "text"}
+              value={identifier}
+              onChange={(event) => setIdentifier(event.target.value)}
+              placeholder={isAdmin ? "admin@vixatacado.com.br" : "123.456.789-09 ou 12.345.678/0001-90"}
+              autoComplete={isAdmin ? "username" : "off"}
+            />
           </label>
           <label>
             Senha
-            <input type="password" placeholder="Sua senha" />
+            <input
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Sua senha"
+              autoComplete="current-password"
+            />
           </label>
 
-          {isAdmin ? (
-            <div className="admin-login-actions">
-              <button type="button" className="primary-action full" onClick={() => onLogin("admin", "/projeto/admin")}>
-                <LockKeyhole size={18} />
-                Entrar como admin
-              </button>
-              <button type="button" className="ghost-action full" onClick={() => onLogin("manager", "/projeto/admin")}>
-                Entrar como gerente
-              </button>
-              <button type="button" className="ghost-action full" onClick={() => onLogin("seller", "/projeto/admin")}>
-                Entrar como vendedor
-              </button>
-            </div>
-          ) : (
-            <button type="button" className="primary-action full" onClick={() => onLogin("customer", "/projeto/cliente")}>
-              <LockKeyhole size={18} />
-              Entrar na conta
-            </button>
-          )}
+          {error ? <div className="form-alert is-error">{error}</div> : null}
+          {notice ? <div className="form-alert">{notice}</div> : null}
 
-          <button type="button" className="text-action">
+          <button type="submit" className="primary-action full">
+            <LockKeyhole size={18} />
+            Entrar
+          </button>
+
+          <button
+            type="button"
+            className="text-action"
+            onClick={() =>
+              setNotice(
+                isAdmin
+                  ? "Recuperação interna deve ser feita pelo administrador principal ou Supabase Auth."
+                  : "Recuperação de senha: informe CPF/CNPJ e solicite redefinição ao atendimento Vix."
+              )
+            }
+          >
             Recuperar senha
           </button>
+
+          <div className="test-credential-list">
+            <strong>Acessos de teste</strong>
+            {visibleCredentials.map((credential) => (
+              <div className="credential-card" key={credential.id}>
+                <div>
+                  <span>{credential.label}</span>
+                  <small>{credential.login}</small>
+                  <small>Senha: {credential.password}</small>
+                </div>
+                <button type="button" className="ghost-action small" onClick={() => fillCredential(credential)}>
+                  Usar dados
+                </button>
+              </div>
+            ))}
+          </div>
         </form>
 
         {!isAdmin ? (
@@ -91,6 +174,14 @@ export function Auth({ mode, onNavigate, onLogin }: AuthProps) {
             <label>
               Telefone
               <input placeholder="(27) 99999-9999" />
+            </label>
+            <label>
+              Senha de acesso
+              <input type="password" placeholder="Crie uma senha" autoComplete="new-password" />
+            </label>
+            <label>
+              Confirmar senha
+              <input type="password" placeholder="Repita a senha" autoComplete="new-password" />
             </label>
             <label>
               Segmento
@@ -127,20 +218,6 @@ export function Auth({ mode, onNavigate, onLogin }: AuthProps) {
         )}
       </div>
 
-      <div className={isSupabaseConfigured ? "system-status online" : "system-status"}>
-        <strong>{isSupabaseConfigured ? "Supabase configurado" : "Supabase aguardando variáveis de ambiente"}</strong>
-        <span>
-          {isSupabaseConfigured
-            ? "Login real pronto para conexão com Auth e RLS."
-            : "Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para autenticação real."}
-        </span>
-      </div>
-
-      {!isAdmin ? (
-        <button type="button" className="text-action auth-admin-shortcut" onClick={() => onNavigate("/projeto/loginadmin")}>
-          Acesso interno
-        </button>
-      ) : null}
     </section>
   );
 }
